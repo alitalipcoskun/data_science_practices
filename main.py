@@ -7,8 +7,7 @@ if __name__ == '__main__':
     outlierHandler = outlierHandler()
     df = dfOps.loadCsvDataset(path= r"datasets\titanic.csv")
     df = dfOps.lowercaseColNames(df)
-    [categoric, numeric, cardinal] = outlierHandler.seperateColumns(df) 
-    print(numeric)
-    for column in numeric:
-        df = outlierHandler.removeOutliers(df, column)
-        outlierHandler.checkOutlier(df, column)
+    [categoric, numeric, cardinal] = dfOps.seperateColumns(df) 
+    
+    
+    

@@ -15,13 +15,10 @@ class singleColOutliers:
 
     def __init__(self, 
                  q1: float = 0.10,
-                 q3: float = 0.90,
-                 categoryTh: int = 8,
-                 cardinalTh: int = 20) -> None:
+                 q3: float = 0.90,) -> None:
         
         self.setQuartiles(q1, q3)
-        self.__categoryTh = categoryTh
-        self.__cardinalTh = cardinalTh
+
     
     def getQuartiles(self) -> list[float]:
         return [self.__q1, self.__q3]
@@ -35,14 +32,7 @@ class singleColOutliers:
         self.__q3 = q3
     
 
-    def getTresholds(self):
-        return [self.__cardinalTh, self.__categoryTh]
 
-    def setTresholds(self,
-                     cardinalTh: int = 20,
-                     categoryTh: int = 8) -> None:
-        self.__cardinalTh = cardinalTh
-        self.__categoryTh = categoryTh
 
     def findBounds(self, df: pd.DataFrame, 
                column: str) -> list:
@@ -93,33 +83,7 @@ class singleColOutliers:
         else:
             print(f"{column} has no outlier rows.")
 
-    def seperateColumns(self, df: pd.DataFrame) -> list:
-        """
-            The function helps you seperate columns as follows: categoric, numeric, ordinal
 
-            Parameters:
-                df: It is the dataframe that the columns must be seperated.
-                categoricTh: It is a value to assign numeric column but behaves as categoric column
-                cardinalTh: It is a valut to assign categoric column but behaves as numeric column
-
-            Returns: [categoric_cols, numeric_cols, ordinal_cols]
-                categoric_cols -> list: It holds the categoric typed columns after the function execution
-                numeric_cols -> list: It holds the numeric typed columns after the function execution
-                ordinal_cols -> list: It holds the ordinal typed columns after the function execution.
-        """
-        [cardinalTh, categoricTh] = self.getTresholds()
-        categoric_cols = [column for column in df.columns if df[column].dtypes == 'O']
-        numeric_columns = [column for column in df.columns if df[column].dtypes != 'O']
-        num_but_cats = [column for column in df.columns if df[column].nunique() < categoricTh and df[column].dtypes != 'O']
-
-        cat_but_cardinals = [column for column in categoric_cols if df[column].nunique() > cardinalTh]
-
-        categoric_cols = categoric_cols + num_but_cats
-        categoric_cols = [column for column in categoric_cols if column not in cat_but_cardinals]
-
-        numeric_columns = [column for column in numeric_columns if column not in num_but_cats]
-
-        return [categoric_cols, numeric_columns, cat_but_cardinals]
 
     def grabOutlierIndexes(self, df: pd.DataFrame,
                        column: str) -> list:

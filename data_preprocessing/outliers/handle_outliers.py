@@ -22,7 +22,14 @@ class outlierHandler(singleCol):
         super().__init__()
         self.__set_lof(LocalOutlierFactor, n_neighbors= n_neighbors)
     
+    def getTresholds(self):
+        return [self.__cardinalTh, self.__categoryTh]
 
+    def setTresholds(self,
+                     cardinalTh: int = 20,
+                     categoryTh: int = 8) -> None:
+        self.__cardinalTh = cardinalTh
+        self.__categoryTh = categoryTh
     def __get_lof(self) -> LocalOutlierFactor:
         return self.__lof
 
@@ -37,4 +44,5 @@ class outlierHandler(singleCol):
         lof_calculator = self.__get_lof()
         lof_calculator.fit_predict(df)
         df_scores = lof_calculator.negative_outlier_factor_
+        print(df_scores)
 

@@ -44,3 +44,31 @@ class dfOperations:
         """
         if column not in df.columns:
             raise Exception(f"{column} is not in the list of dataframe columns.")
+    def seperateColumns(df: pd.DataFrame,
+                        categoricTh: int = 8,
+                        cardinalTh: int = 20) -> list:
+        """
+            The function helps you seperate columns as follows: categoric, numeric, ordinal
+
+            Parameters:
+                df: It is the dataframe that the columns must be seperated.
+                categoricTh: It is the treshold for categoric variables. It is defined 8 as default.
+                cardinalTh: It is the treshold for cardinal variables. It is defined 20 as default.
+
+            Returns: [categoric_cols, numeric_cols, ordinal_cols]
+                categoric_cols -> list: It holds the categoric typed columns after the function execution
+                numeric_cols -> list: It holds the numeric typed columns after the function execution
+                ordinal_cols -> list: It holds the ordinal typed columns after the function execution.
+        """
+        categoric_cols = [column for column in df.columns if df[column].dtypes == 'O']
+        numeric_columns = [column for column in df.columns if df[column].dtypes != 'O']
+        num_but_cats = [column for column in df.columns if df[column].nunique() < categoricTh and df[column].dtypes != 'O']
+
+        cat_but_cardinals = [column for column in categoric_cols if df[column].nunique() > cardinalTh]
+
+        categoric_cols = categoric_cols + num_but_cats
+        categoric_cols = [column for column in categoric_cols if column not in cat_but_cardinals]
+
+        numeric_columns = [column for column in numeric_columns if column not in num_but_cats]
+
+        return [categoric_cols, numeric_columns, cat_but_cardinals]   
