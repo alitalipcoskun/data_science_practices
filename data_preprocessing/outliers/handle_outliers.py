@@ -2,7 +2,8 @@ import pandas as pd
 import sys
 #It is for importing the dfOps class.
 sys.path.append(r"C:\Users\ali_t\data_science\data_science_practices\feature_engineering\data_preprocessing")
-from data_preprocessing.outliers._single_outliers import singleColOutliers as singleCol
+from df_operations import dfOps
+from outliers._single_outliers import singleColOutliers as singleCol
 from sklearn.neighbors import LocalOutlierFactor
 
 
@@ -13,13 +14,12 @@ LOF'un verdiği skor 1'e ne kadar yakınsa o kadar iyidir.
 1'den uzaklaştıkça, ilgili değer outlier olmaya yakınlaşır.
 Verileri iki boyutlu olarak görselleştirebilmek dimentional reduction. (PCA)
 Principle Component Analysisle yapılabilir.
-
 """
 
 class outlier_handler(singleCol):
     
-    def __init__(self, n_neighbors: int = 20):
-        super().__init__()
+    def __init__(self, q1: int = 0.1, q3: int = 0.9, n_neighbors: int = 20):
+        super().__init__(q1= q1, q3= q3)
         self.__set_lof(LocalOutlierFactor, n_neighbors= n_neighbors)
     
     def getTresholds(self):
@@ -37,7 +37,7 @@ class outlier_handler(singleCol):
                   LocalOutlierFactor,
                     n_neighbors: int = 20) -> None:
         
-        self.__lof = LocalOutlierFactor(n_neighbors= n_neighbors)
+        self.__lof = local_outlier(n_neighbors= n_neighbors)
 
     def findLocalOutlierFactor(self,
                                df: pd.DataFrame):

@@ -1,11 +1,11 @@
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
-import seaborn as sns
+from sklearn.preprocessing import MinMaxScaler
 
 
 class df_operations:
-    def loadCsvDataset(path:str = "datasets\diabetes.csv") -> pd.DataFrame:
+    def loadCsvDataset(self,
+                    path:str = "datasets\diabetes.csv") -> pd.DataFrame:
         """
         Takes the path of the dataset, which is csv file, returns the dataframe.
             path: Takes a string path argument to return the dataframe.
@@ -17,7 +17,8 @@ class df_operations:
         df = pd.read_csv(path)
         return df
 
-    def lowercaseColNames(df: pd.DataFrame) -> pd.DataFrame:
+    def lowercaseColNames(self,
+                         df: pd.DataFrame) -> pd.DataFrame:
         """
         The function takes a dataframe as input and returns the dataframe as same. However, it changes the column names to lowercased version of the original.
 
@@ -31,7 +32,9 @@ class df_operations:
         df.columns = [column.lower() for column in df.columns]
         return df
 
-    def verifyColumn(df: pd.DataFrame,column: str):
+    def verifyColumn(self,
+                    df: pd.DataFrame,
+                    column: str):
         """
         The function finds out whether the input string is in the list of dataframe's columns or not
 
@@ -44,7 +47,8 @@ class df_operations:
         """
         if column not in df.columns:
             raise Exception(f"{column} is not in the list of dataframe columns.")
-    def seperateColumns(df: pd.DataFrame,
+    def seperateColumns(self,
+                        df: pd.DataFrame,
                         categoricTh: int = 8,
                         cardinalTh: int = 20) -> list:
         """
@@ -75,4 +79,61 @@ class df_operations:
 
         numeric_columns = [column for column in numeric_columns if column not in num_but_cats]
 
-        return [categoric_cols, numeric_columns, cat_but_cardinals]   
+        return [categoric_cols, numeric_columns, cat_but_cardinals]
+
+    def one_hot_encoder(self,
+                        df: pd.DataFrame,
+                        cat_cols: list[str],
+                        num_cols: list[str],
+                        drop_first: bool = True) -> pd.DataFrame:
+        
+        """
+            It converts labeled data to different categories that have a natural ordering to them.
+            Any categorical data must be mapped to integers in order to use in machine learning.
+
+            args:
+                df -> pd.DataFrame: dataframe that wanted to be encoded.
+                cat_cols -> the list that includes categorical behaviour columns.
+                num_cols -> list[str]:the list that includes numerical behaviour columns.
+                drop_first -> bool = True: it improves accuracy of predictions and protects data repetition. It has True value by default.
+
+            returns:
+                output_df -> pd.DataFrame: It returns encoded dataframe. 
+        """
+        output_df = pd.get_dummies(df[cat_cols + num_cols], drop_first= drop_first)
+
+        return output_df
+
+    def scale_with_minmax(self,
+                          df: pd.DataFrame) -> pd.DataFrame:
+        """
+            Minimum of the feature is considered as zero and maximum of feature is
+            considered as one. It transforms data by scaling features to a given range.
+
+            args:
+                df -> pd.DataFrame: dataframe that wanted to scale with MinMaxScaler.
+            
+            returns:
+                output_df -> pd.DataFrame: It returns scaled dataframe.
+        """
+        scaler = MinMaxScaler()
+        output_df = pd.DataFrame(scaler.fit_transform(df), columns = df.columns)
+        return output_df
+    
+    def inverse_minmax_transform(self,
+                          df: pd.DataFrame) -> pd.DataFrame:
+        """
+        It inverses the transformation with respect to the MinMax scaler
+        to observe the changes in dataframe.
+        
+        args:
+            df -> pd.DataFrame: dataframe that wanted to inversed.
+        
+        returns:
+            output_df -> pd.DataFrame: dataframe that inversed transformation
+            with respect to the MinMaxScaler.
+        """
+
+        scaler = MinMaxScaler()
+        output_df = pd.DataFrame(scaler.inverse_transform(df), columns = df.columns)
+        return output_df

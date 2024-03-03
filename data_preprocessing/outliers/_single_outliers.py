@@ -5,7 +5,7 @@ import seaborn as sns
 import sys
 #It is for importing the dfOps class.
 sys.path.append(r"C:\Users\ali_t\data_science\data_science_practices\feature_engineering\data_preprocessing")
-from data_preprocessing.df_operations.dataframe_operations import df_operations as dfOps
+from df_operations.dataframe_operations import df_operations as dfOps
 
 
 class singleColOutliers:
@@ -104,6 +104,8 @@ class singleColOutliers:
 
     def replaceWithBounds(self, df: pd.DataFrame,
                           column: str) -> pd.DataFrame:
+        checker = dfOps()
+        checker.verifyColumn(df, column)
         [upper_bound, lower_bound] = self.findBounds(df, column)
         df.loc[df[column] < lower_bound, column] = lower_bound
         df.loc[df[column] > upper_bound, column] = upper_bound
@@ -112,7 +114,8 @@ class singleColOutliers:
 
     def removeOutliers(self, df: pd.DataFrame,
                    column: str) -> pd.DataFrame:
-        dfOps.verifyColumn(df, column)
+        checker = dfOps()
+        checker.verifyColumn(df, column)
         [upper_bound, lower_bound] = self.findBounds(df, column)
 
         df = df.loc[~((df[column] < lower_bound) | (df[column] > upper_bound)), :]
