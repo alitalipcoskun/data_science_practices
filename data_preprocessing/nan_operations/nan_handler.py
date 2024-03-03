@@ -51,7 +51,7 @@ class nan_handler:
         return output_df
     
     def fill_with_mean(self,
-                       df: pd.DataFrame):
+                       df: pd.DataFrame) -> pd.DataFrame:
         """
         It fills the numeric columns of dataframe with mean values. It does not
         touch or fill other type of columns.
@@ -65,11 +65,18 @@ class nan_handler:
             definition. 
         
         """    
-
-        output_df = df.apply(lambda column: column.fillna(column.mean()) if(column.dtype != "O") else column)
+        output_df = df.copy()
+        output_df = output_df.apply(lambda column: column.fillna(column.mean()) if(column.dtype != "O") else column)
 
         return output_df
     
+    def fill_with_mode(self,
+                       df: pd.DataFrame,
+                       cardinalTh: int = 20) -> pd.DataFrame:
+
+        output_df = df.copy()
+        output_df = output_df.appy(lambda column: column.fillna(column.mode()) if(column.dtype == 'O'and len(column.unique())  <=  cardinalTh) else column)    
+        return output_df
     
     
     def fill_with_cat_mean(self,

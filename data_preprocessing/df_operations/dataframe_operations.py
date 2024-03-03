@@ -4,8 +4,19 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 class df_operations:
-    def loadCsvDataset(self,
-                    path:str = "datasets\diabetes.csv") -> pd.DataFrame:
+    def __init__(self, 
+                 path:str = "datasets\diabetes.csv") -> None:
+        self.__set_path(path)
+
+    def get_path(self) -> str:
+        return self.__path
+
+    def __set_path(self,
+                   path: str):
+        self.__path = path
+
+
+    def loadCsvDataset(self) -> pd.DataFrame:
         """
         Takes the path of the dataset, which is csv file, returns the dataframe.
             path: Takes a string path argument to return the dataframe.
@@ -14,7 +25,11 @@ class df_operations:
             df: Returns the dataframe that is located to the path.
 
         """
+        path = self.get_path()
         df = pd.read_csv(path)
+        path_list = path.split("\\")
+        dataframe_name = path_list[-1]
+        print(f"{path} located {dataframe_name} file is succesfully read by your pre-processing environment!")
         return df
 
     def lowercaseColNames(self,
@@ -46,7 +61,10 @@ class df_operations:
                 None
         """
         if column not in df.columns:
-            raise Exception(f"{column} is not in the list of dataframe columns.")
+            path = self.get_path()
+            path_list = path.split("\\")
+            dataframe_name = path_list[-1] 
+            raise Exception(f"{column} is not in the list of {dataframe_name[-1]} columns.")
     def seperateColumns(self,
                         df: pd.DataFrame,
                         categoricTh: int = 8,
