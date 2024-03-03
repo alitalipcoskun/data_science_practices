@@ -1,7 +1,9 @@
 from . import outliers
-from . import operations
+from . import df_operations
+from . import nan_operations
 
 __all__ = [
     "outliers",
-    "operations",
+    "df_operations",
+    "nan_operations"
 ]

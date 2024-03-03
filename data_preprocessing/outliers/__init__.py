@@ -1,5 +1,5 @@
-from .handle_outliers import outlierHandler
+from .handle_outliers import outlier_handler
 
 __all__ = [
-    "outlierHandler",
+    "outlier_handler",
 ]

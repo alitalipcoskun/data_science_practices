@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 
 
-class dfOperations:
+class df_operations:
     def loadCsvDataset(path:str = "datasets\diabetes.csv") -> pd.DataFrame:
         """
         Takes the path of the dataset, which is csv file, returns the dataframe.
@@ -60,6 +60,10 @@ class dfOperations:
                 numeric_cols -> list: It holds the numeric typed columns after the function execution
                 ordinal_cols -> list: It holds the ordinal typed columns after the function execution.
         """
+        assert categoricTh >= 8, f"{categoricTh} is not a valid amount to consider"
+        assert cardinalTh >= 20 , f"{cardinalTh} is not a valid amount to consider"
+
+
         categoric_cols = [column for column in df.columns if df[column].dtypes == 'O']
         numeric_columns = [column for column in df.columns if df[column].dtypes != 'O']
         num_but_cats = [column for column in df.columns if df[column].nunique() < categoricTh and df[column].dtypes != 'O']

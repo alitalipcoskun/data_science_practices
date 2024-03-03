@@ -2,7 +2,7 @@ import pandas as pd
 import sys
 #It is for importing the dfOps class.
 sys.path.append(r"C:\Users\ali_t\data_science\data_science_practices\feature_engineering\data_preprocessing")
-from outliers.single_outliers import singleColOutliers as singleCol
+from data_preprocessing.outliers._single_outliers import singleColOutliers as singleCol
 from sklearn.neighbors import LocalOutlierFactor
 
 
@@ -16,7 +16,7 @@ Principle Component Analysisle yapılabilir.
 
 """
 
-class outlierHandler(singleCol):
+class outlier_handler(singleCol):
     
     def __init__(self, n_neighbors: int = 20):
         super().__init__()

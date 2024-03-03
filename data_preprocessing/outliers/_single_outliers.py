@@ -5,7 +5,7 @@ import seaborn as sns
 import sys
 #It is for importing the dfOps class.
 sys.path.append(r"C:\Users\ali_t\data_science\data_science_practices\feature_engineering\data_preprocessing")
-from data_preprocessing.operations.dataframe_operations import dfOperations as dfOps
+from data_preprocessing.df_operations.dataframe_operations import df_operations as dfOps
 
 
 class singleColOutliers:
