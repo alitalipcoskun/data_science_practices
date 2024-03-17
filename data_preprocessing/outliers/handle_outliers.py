@@ -16,10 +16,23 @@ Verileri iki boyutlu olarak görselleştirebilmek dimentional reduction. (PCA)
 Principle Component Analysisle yapılabilir.
 """
 
+"""
+Local Outlier Factor is used to determine outliers with respect to the multi-variable(multiple columns).
+
+When the score is close to 1, it means that it is good, which means not outlier, for the row.
+
+"""
+
+
 class outlier_handler(singleCol):
     
-    def __init__(self, q1: int = 0.1, q3: int = 0.9, n_neighbors: int = 20):
-        super().__init__(q1= q1, q3= q3)
+    def __init__(self,
+                path: str,
+                q1: int = 0.1,
+                q3: int = 0.9,
+                n_neighbors: int = 20):
+        
+        super().__init__(q1= q1, q3= q3, path= path)
         self.__set_lof(LocalOutlierFactor, n_neighbors= n_neighbors)
     
     def getTresholds(self):
@@ -33,9 +46,9 @@ class outlier_handler(singleCol):
     def __get_lof(self) -> LocalOutlierFactor:
         return self.__lof
 
-    def __set_lof(self, local_outlier:
-                  LocalOutlierFactor,
-                    n_neighbors: int = 20) -> None:
+    def __set_lof(self, 
+                local_outlier: LocalOutlierFactor,
+                n_neighbors: int = 20) -> None:
         
         self.__lof = local_outlier(n_neighbors= n_neighbors)
 

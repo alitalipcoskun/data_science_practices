@@ -54,8 +54,8 @@ class df_operations:
         The function finds out whether the input string is in the list of dataframe's columns or not
 
             Parameters:
-                df: The dataframe that must be checked to find out whether the input string is column of its or not.
-                column: The string that to gets checked in this function.
+                df -> pd.DataFrame: The dataframe that must be checked to find out whether the input string is column of its or not.
+                column -> str: The string that to gets checked in this function.
 
             Returns:
                 None
@@ -73,9 +73,9 @@ class df_operations:
             The function helps you seperate columns as follows: categoric, numeric, ordinal
 
             Parameters:
-                df: It is the dataframe that the columns must be seperated.
-                categoricTh: It is the treshold for categoric variables. It is defined 8 as default.
-                cardinalTh: It is the treshold for cardinal variables. It is defined 20 as default.
+                df -> pd.DataFrame: It is the dataframe that the columns must be seperated.
+                categoricTh -> int: It is the treshold for categoric variables. It is defined 8 as default.
+                cardinalTh -> int: It is the treshold for cardinal variables. It is defined 20 as default.
 
             Returns: [categoric_cols, numeric_cols, ordinal_cols]
                 categoric_cols -> list: It holds the categoric typed columns after the function execution

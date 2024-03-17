@@ -31,7 +31,18 @@ class nan_handler:
     def nan_information(self, 
                         df: pd.DataFrame
                         ) -> pd.DataFrame:
+        """
+        The function finds the ratio and amount of missing rows for each column that has null value.
         
+        args:
+            df -> pd.DataFrame: the dataframe that wanted to be analyzed with respect to the null values.
+        
+        returns:
+            output_df -> pd.DataFrame: the dataframe that has null valued columns, n_miss for finding out the amount of the missing values for each column,
+            ratio for the finding out amount of null rows / total rows.
+        
+        """
+
         nan_columns = self.find_nan_columns(df)
 
         n_miss = []
@@ -64,7 +75,8 @@ class nan_handler:
             output_df -> pd.DataFrame: dataframe that filled with respect to the function
             definition. 
         
-        """    
+        """
+
         output_df = df.copy()
         output_df = output_df.apply(lambda column: column.fillna(column.mean()) if(column.dtype != "O") else column)
 
@@ -99,10 +111,11 @@ class nan_handler:
             group_col argument.  
         
         """
+
         checker = dfOps()
         checker.verifyColumn(df, filled_col)
         checker.verifyColumn(df, filled_col)
-        #Copying is for protecting the original one in function.
+        #Copying is for protecting the original dataframe in function.
         output_df = df.copy()
         output_df[filled_col] = df[filled_col].fillna(df.groupby(group_col)[filled_col].transform("mean"))
 
@@ -126,6 +139,7 @@ class nan_handler:
             output_df -> pd.DataFrame: dataframe that has no NaN values. It is filled with respect
             to the sklearn.impute.KNNImputer.
         """
+        
         assert n_neighbors > 1, f"{n_neighbors} is not a valid to be used in KNNImputer. Try to give an integer that is bigger than 1."
         imputer = KNNImputer(n_neighbors= n_neighbors)
         output_df = pd.DataFrame(imputer.fit_transform(df), columns = df.columns)
