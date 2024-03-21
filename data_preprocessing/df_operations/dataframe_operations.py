@@ -3,6 +3,16 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
 
+"""
+Feature scaling her veriye aynı şartlar altında yaklaşabilmeyi amaçlandığı için yaygın olarak kullanılan bir yaklaşımdır.
+Aynı zamanda gradient descent temelli makine öğrenmesi algoritmalarının daha hızlı ve efektif çalışmasını da sağlamaktadır.
+Büyük değerlere sahip veriler, küçük yapılı değerlere baskın geldiğinde PCA, kNN gibi algoritmalarda bias oluşmasına sebep olmaktadır.
+
+Ağaca bağlı değerler nan değerlerden, aykırı değerlerden ve standartlaştırmalardan etkilenmemektedir. Ağaçlar, tüm olasılıkları göz önünde bulundurduğu için
+etkilenmemektedir.
+
+
+"""
 class df_operations:
     def __init__(self, 
                  path:str = "datasets\diabetes.csv") -> None:
@@ -99,6 +109,15 @@ class df_operations:
 
         return [categoric_cols, numeric_columns, cat_but_cardinals]
 
+    def category_convert(self,
+                        df: pd.DataFrame,
+                        categoric_cols: list[str]) -> pd.DataFrame:
+        
+        for column in categoric_cols:
+            df[column] = df[column].astype(object)
+
+        return df
+
     def one_hot_encoder(self,
                         df: pd.DataFrame,
                         cat_cols: list[str],
@@ -121,6 +140,64 @@ class df_operations:
         output_df = pd.get_dummies(df[cat_cols + num_cols], drop_first= drop_first)
 
         return output_df
+
+    def rare_analyser(self,
+                     df: pd.DataFrame,
+                     target_col: str,
+                     cat_cols: list[str]) -> pd.DataFrame:
+        """
+        The function analyzes the columns with respect to the target column.
+
+        args:
+            df -> pd.DataFrame: dataframe that wanted to be get analyzed by its target column.
+            target_col -> str: the column name that is targeted for prediction.
+            cat_cols: -> list[str]: the list that includes categoric typed columns in dataframe
+
+        returns:
+            None  
+        
+        """
+        
+        for column in cat_cols:
+            print(f"{column}: {len(df[column].value_counts())}")
+            printed_df = pd.DataFrame({
+                "Count": df[column].value_counts(),
+                "Ratio": df[column].value_counts() / len(df),
+                "Target Mean": df.groupby(column)[target_col].mean()})
+            
+            print(printed_df, end = "\n\n")
+    
+
+    def rare_encoder(self,
+                    df: pd.DataFrame,
+                    cat_cols: list[str],
+                    rare_th: float = 0.1) -> pd.DataFrame:
+        
+        #Protect the dataframe with copying
+        output_df = df.copy()
+
+        #Find out the columns that has rare labels on its rows.
+        rare_cols = [column for column in cat_cols if((output_df[column].value_counts() / len(output_df)) < rare_th).any()]
+
+        #Process the columns that has rare labels
+        for column in rare_cols:
+            temp = output_df[column].value_counts() / len(output_df)
+            rare_labels = temp[temp < rare_th].index
+            output_df[column] = np.where(output_df[column].isin(rare_labels), 'Rare', output_df[column])
+            #Debugging
+            print(output_df[column].value_counts())
+            print(f"{column}: {len(df[column].value_counts())}")
+            printed_df = pd.DataFrame({
+                "Count": output_df[column].value_counts(),
+                "Ratio": output_df[column].value_counts() / len(df),
+                "Target Mean": output_df.groupby(column)['survived'].mean()})
+            
+            print(printed_df, end = "\n\n")
+        #Return the new dataframe
+        return output_df
+
+
+
 
     def scale_with_minmax(self,
                           df: pd.DataFrame) -> pd.DataFrame:
